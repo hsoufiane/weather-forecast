@@ -1,5 +1,7 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import {WeatherScreenScene} from '../WeatherScreen.scene';
+import { describe, it, expect, vi } from 'vitest';
+import { WeatherScreenScene } from '../WeatherScreen.scene';
 
 describe('WeatherScreenScene', () => {
   const mockWeatherData = [
@@ -21,23 +23,23 @@ describe('WeatherScreenScene', () => {
     render(
       <WeatherScreenScene
         weatherData={mockWeatherData}
-        onRefresh={jest.fn()}
+        onRefresh={vi.fn()}
         isLoading={false}
       />
     );
 
     expect(screen.getByText('Weather Forecast')).toBeInTheDocument();
     expect(screen.getByText('Now')).toBeInTheDocument();
-    expect(screen.getByText('25°C')).toBeInTheDocument();
+    expect(screen.getByText('25 °C')).toBeInTheDocument();
     expect(screen.getByText('14:00')).toBeInTheDocument();
-    expect(screen.getByText('26°C')).toBeInTheDocument();
+    expect(screen.getByText('26 °C')).toBeInTheDocument();
   });
 
   it('renders refresh button', () => {
     render(
       <WeatherScreenScene
         weatherData={mockWeatherData}
-        onRefresh={jest.fn()}
+        onRefresh={vi.fn()}
         isLoading={false}
       />
     );
@@ -49,7 +51,7 @@ describe('WeatherScreenScene', () => {
     render(
       <WeatherScreenScene
         weatherData={mockWeatherData}
-        onRefresh={jest.fn()}
+        onRefresh={vi.fn()}
         isLoading={true}
       />
     );
@@ -58,5 +60,4 @@ describe('WeatherScreenScene', () => {
     expect(screen.getByRole('button', { name: 'Loading...' })).toBeDisabled();
   });
 });
-export { WeatherScreenScene };
 
