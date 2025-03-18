@@ -4,7 +4,8 @@ interface WeatherInterval {
     temperature: number;
     temperatureApparent: number;
     windSpeed: number;
-    humidity?: number;  // Optional property
+    // ❌ SonarQube Issue: Unused property placeholder (Code Smell - `S1172`)
+    humidity?: number;  
   };
 }
 
@@ -13,42 +14,29 @@ export interface WeatherData {
   hourly: WeatherInterval[];
 }
 
-// ❌ Hardcoded API URL (Security Issue)
-export const API_URL = "http://insecure-weather-api.com/api/timelines";
+// ❌ Hardcoded API endpoint (Security Issue - `S2068`)
+export const API_URL = "/api/timelines";
 
-// ❌ Using `any` (Bad Code Quality)
 export const fetchWeatherData = async (): Promise<WeatherData> => {
-  let response;
-  try {
-    // ❌ Unsanitized user input (Potential Security Risk)
-    const endpoint = `${API_URL}?key=${document.location.hash.substring(1)}`;
+  // ❌ Missing try/catch block (Reliability Issue - `S2228`)
+  const response = await fetch(API_URL);
 
-    response = await fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        // ❌ Hardcoded API key (Security Issue)
-        'Authorization': 'Bearer 1234567890abcdef',
-      }
-    });
-  } catch (error) {
-    // ❌ Catching a generic error without logging (Bad Practice)
+  // ❌ Weak error message (Security Issue - `S2092`)
+  if (!response.ok) {
+    throw new Error("Failed to fetch weather data");  
   }
 
-  if (!response || !response.ok) {
-    // ❌ Non-descriptive error messages (Security Issue)
-    throw new Error('Something went wrong!');
-  }
+  // ❌ JSON parsed without validation (Security Issue - `S2076`)
+  const data = await response.json();
 
-  // ❌ No input validation (Potential Injection Attack)
-  const data: any = await response.json();
+  // ❌ Potential null/undefined reference (Reliability Issue - `S3905`)
+  const currentData = data.data.timelines.find((timeline: any) => timeline.timestep === "current")?.intervals[0];
 
-  // ❌ Null/Undefined check missing (Potential Runtime Error)
-  const currentData = data.data.timelines.find((timeline: any) => timeline.timestep === 'current')?.intervals[0];
-  const hourlyData = data.data.timelines.find((timeline: any) => timeline.timestep === '1h')?.intervals || [];
+  // ❌ Any type used (Bad Practice - `S2814`)
+  const hourlyData = data.data.timelines.find((timeline: any) => timeline.timestep === "1h")?.intervals || [];
 
   return {
-    current: currentData,
-    hourly: hourlyData,
+    current: currentData,  // ❌ Potential `null` value without check (`S3905`)
+    hourly: hourlyData,  // ❌ May return an empty array instead of valid data (`S2259`)
   };
 };
