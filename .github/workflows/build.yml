@@ -22,7 +22,7 @@ jobs:
 
       - name: Pull lightweight model (e.g., mistral:7b-q4_K_M)
         run: |
-          ollama pull mistral:7b-q4_K_M
+          ollama pull mistral
 
       - name: Analyze React code in src/ folder
         run: |
