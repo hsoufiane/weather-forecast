@@ -1,26 +1,37 @@
-name: Build
+name: Analyze React Code with Ollama
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
-
+    branches: [main]
 
 jobs:
-  build:
-    name: Build
+  analyze-react-code:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      # If you wish to fail your job when the Quality Gate is red, uncomment the
-      # following lines. This would typically be used to fail a deployment.
-      # - uses: sonarsource/sonarqube-quality-gate-action@master
-      #   timeout-minutes: 5
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          echo "Starting Ollama server in background..."
+          nohup ollama serve > /dev/null 2>&1 &
+          sleep 10
+
+      - name: Pull lightweight model (e.g., mistral:7b-q4_K_M)
+        run: |
+          ollama pull mistral:7b-q4_K_M
+
+      - name: Analyze React code in src/ folder
+        run: |
+          echo "Analyzing files in src/ folder..."
+          for file in $(find src -type f \( -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" \)); do
+            echo "======================"
+            echo " Analyzing: $file"
+            echo "======================"
+            PROMPT="Analyze this React code. Point out bugs, anti-patterns, or improvements:\n$(cat "$file")"
+            echo -e "$PROMPT" | ollama run mistral:7b-q4_K_M
+            echo ""
+          done
