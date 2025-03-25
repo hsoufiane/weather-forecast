@@ -32,6 +32,6 @@ jobs:
             echo " Analyzing: $file"
             echo "======================"
             PROMPT="Analyze this React code. Point out bugs, anti-patterns, or improvements:\n$(cat "$file")"
-            echo -e "$PROMPT" | ollama run mistral:7b-q4_K_M
+            echo -e "$PROMPT" | ollama run mistral
             echo ""
           done
