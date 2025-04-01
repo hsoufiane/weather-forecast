@@ -1,0 +1,35 @@
+React Weather Forecast App
+ Technology
+React.js
+ Title
+React Weather Forecast App
+ Description
+Build a weather app that shows a 24-hour forecast using data from a local mock server. Include real-
+time data retrieval, pull-to-refresh, error handling, and offline support. Add unit tests and clear
+commits.
+ Project Steps:
+- Start the Local Mock Server: Use the Mockoon tool to launch the local mock server.
+- Fetch Weather Data: Retrieve weather data from the local mock server.
+- Display Data in a List: The list should include the following details:
+• Wind speed
+• Temperature
+• Apparent temperature
+• ⚠ Important: Use the "timestep": "1h" field to fetch weather data for each
+upcoming hour.
+- Add a pull-to-refresh functionality.
+- Handle potential errors gracefully.
+- Write Unit Tests: Ensure core functionalities are tested with Jest.
+- Offline Data Support : The app must display previously fetched data even when offline.
+ Guidelines
+- You must at least complete step 4.
+- Your commits should be clear and reflect your thought process.
+- The expected technologies are Jest, Axios, and a state management tool (Redux, Mobx, or
+equivalent).
+- The application's design (UI) is up to you.
+ Resources:
+- Mockoon download link.
+- Use the attached weather_mockoon.json environment file.
+ Duration
+ 24 hours.
+Good luck! If you are passionate about building this challenge and want to showcase your skills as
+part of an amazing team, let's code now!
