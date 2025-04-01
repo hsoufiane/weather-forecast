@@ -21,7 +21,7 @@ jobs:
           sleep 10
 
       - name: Pull LLM model
-        run: ollama pull mistral
+        run: ollama pull codellama
 
       - name: Prepare and Analyze Code
         run: |
@@ -39,5 +39,5 @@ jobs:
           echo "Building prompt..."
           PROMPT="You are a senior developer evaluating a technical test submission.\n\nHere is the test the candidate was asked to complete:\n\n$TEST_DESCRIPTION\n\nHere is the candidate's submitted code:\n$CODE\n\nPlease:\n1. List which tasks or requirements were completed.\n2. Estimate the percentage of the test that was completed.\n3. Write a short summary of the candidate’s implementation.\n4. Highlight any missing parts or improvements.\n"
 
-          echo -e "$PROMPT" | ollama run mistral
+          echo -e "$PROMPT" | ollama run codellama
 
